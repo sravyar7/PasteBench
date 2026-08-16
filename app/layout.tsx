@@ -5,6 +5,8 @@ import Header from '@/components/shared/Header';
 import Footer from '@/components/shared/Footer';
 import CommandPalette from '@/components/shared/CommandPalette';
 import ServiceWorker from '@/components/shared/ServiceWorker';
+import CookieConsent from '@/components/shared/CookieConsent';
+import InlineScript from '@/components/shared/InlineScript';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { TOOLS } from '@/lib/tools';
@@ -65,20 +67,16 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
-  const hasAdsense = adsenseId && adsenseId !== 'ca-pub-0000000000000000';
+  // The placeholder id counts as unset, so ads and the consent banner both
+  // stay off until a real one is configured.
+  const configured = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const adsenseId =
+    configured && configured !== 'ca-pub-0000000000000000' ? configured : null;
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-        {hasAdsense && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
-            crossOrigin="anonymous"
-          ></script>
-        )}
+        <InlineScript html={THEME_SCRIPT} />
       </head>
       <body
         className={`${inter.variable} ${jetbrains.variable} font-sans bg-canvas text-ink flex flex-col min-h-screen`}
@@ -98,6 +96,7 @@ export default function RootLayout({
         <Footer />
         <CommandPalette />
         <ServiceWorker />
+        {adsenseId && <CookieConsent adsenseId={adsenseId} />}
         <Analytics />
         <SpeedInsights />
       </body>

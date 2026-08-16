@@ -18,7 +18,7 @@ export const metadata: Metadata = {
  */
 export const CONTACT_EMAIL = 'helponlinetools@gmail.com';
 export const ISSUES_URL =
-  'https://github.com/manojtippani-glitch/onlinetools/issues';
+  'https://github.com/sravyar7/PasteBench/issues';
 
 export default function Contact() {
   return (
